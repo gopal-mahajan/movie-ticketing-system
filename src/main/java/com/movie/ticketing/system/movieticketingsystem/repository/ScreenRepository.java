@@ -19,5 +19,6 @@ public interface ScreenRepository extends JpaRepository<Screen, Long> {
     @Query(value = "select * from screen where theater_id=?1 and movie_id=?2", nativeQuery = true)
     Screen getScreenByTheaterAndMovie1(Long theaterId, Long movieId);
 
+    @Query(value = "select * from screen where theater_id=?1 and id=?2",nativeQuery = true)
     Screen findByTheaterIdAndId(Long theaterId, Long screenId);
 }

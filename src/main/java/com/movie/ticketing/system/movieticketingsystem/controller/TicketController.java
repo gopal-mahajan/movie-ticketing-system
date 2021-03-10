@@ -21,8 +21,6 @@ public class TicketController {
     @GetMapping("/ticket/{user_id}")
     List<Ticket> getActiveTickets(@PathVariable("user_id") Long userId) {
         List<Ticket> tickets = ticketRepository.findByUserId(userId, LocalDate.now());
-        return tickets.stream().filter(t ->
-                t.getTime().isAfter(LocalTime.now())
-        ).collect(Collectors.toList());
+        return tickets;
     }
 }

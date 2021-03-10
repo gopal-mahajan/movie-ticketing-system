@@ -17,14 +17,25 @@ public class Seats {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Long getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(Long seatId) {
+        this.seatId = seatId;
+    }
+
+    private Long seatId;
+
     public Seats() {
     }
 
-    public Seats(Long theaterId, Long screenId) throws Exception {
+    public Seats(Long id,Long theaterId, Long screenId) throws Exception {
+        this.seatId = id;
         if (theaterId > 0) {
             this.theaterId = theaterId;
         } else {
-            throw new Exception("Theater dosen't exist");
+            throw new Exception("Theater doesn't exist");
         }
 
         if (screenId > 0) {

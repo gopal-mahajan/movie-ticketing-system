@@ -4,11 +4,13 @@ import com.movie.ticketing.system.movieticketingsystem.entities.Movies;
 import com.movie.ticketing.system.movieticketingsystem.entities.Screen;
 import com.movie.ticketing.system.movieticketingsystem.entities.Seats;
 import com.movie.ticketing.system.movieticketingsystem.entities.Theater;
+import com.movie.ticketing.system.movieticketingsystem.exception.MovieTimeOverlappingException;
 import com.movie.ticketing.system.movieticketingsystem.repository.MovieRepository;
 import com.movie.ticketing.system.movieticketingsystem.repository.ScreenRepository;
 import com.movie.ticketing.system.movieticketingsystem.repository.SeatsRepository;
 import com.movie.ticketing.system.movieticketingsystem.repository.TheaterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +43,12 @@ public class MovieController {
         return movieRepository.save(movies);
     }
 
-    @PostMapping("/schedule/movie")
+    @PostMapping("PostMapping/schedule/movie")
     @Transactional
-    ResponseEntity scheduleMovies(@RequestParam("movie_id") Long movieId, @RequestParam("theater_id") Long theaterId, @RequestParam("screen_id") Long screenId, @RequestParam("time") String time) throws Exception {
+    ResponseEntity scheduleMovies(@RequestParam("movie_id") Long movieId, @RequestParam("theater_id") Long theaterId,
+                                  @RequestParam("screen_id") Long screenId, @RequestParam("time") String time)
+            throws Exception {
+        try{
         String[] timeArr = time.split(",");
         List<LocalTime> times = new ArrayList<>();
         Movies movies = movieRepository.findById(movieId).orElse(null);
@@ -56,24 +61,28 @@ public class MovieController {
             LocalTime to = times.get(i);
             Duration d = Duration.between(from, to);
             if (d.toMinutes() <= movies.getMovieLength()) {
-                throw new Exception("this schedule is not possible");
+                throw new MovieTimeOverlappingException("this schedule is not possible");
             }
         }
         Screen screen = screenRepository.findByTheaterIdAndId(theaterId, screenId);
         screen.setMovieId(movieId);
         screen.setTime(time);
         screenRepository.save(screen);
+
         Theater theater = theaterRepository.findById(screen.getTheaterId()).orElse(null);
 
         if (theater != null) {
             for (int j = 0; j < theater.getSeats(); j++) {
                 for (int i = 0; i < times.size(); i++) {
-                    Seats seats1 = new Seats(theater.getId(), screen.getId());
+                    Seats seats1 = new Seats((long) (j+1),theater.getId(), screen.getId());
                     seats1.setStarttime(times.get(i));
                     seats1.setEndtime(times.get(i).plusMinutes(movies.getMovieLength()));
                     seatsRepository.save(seats1);
                 }
             }
+        }
+        }catch (MovieTimeOverlappingException e){
+            return new ResponseEntity("this schedule is not possible", HttpStatus.CONFLICT);
         }
         return null;
     }

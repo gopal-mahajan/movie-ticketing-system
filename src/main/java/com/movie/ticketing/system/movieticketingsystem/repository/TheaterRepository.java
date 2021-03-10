@@ -12,6 +12,7 @@ public interface TheaterRepository extends JpaRepository<Theater,Long> {
     @Query(value = "select distinct location from theater",nativeQuery = true)
     List<String> findDistinctLocation();
 
+//    @Query(value="select * from theater where location=?1",nativeQuery = true)
     List<Theater> findByLocation(String location);
 
 }

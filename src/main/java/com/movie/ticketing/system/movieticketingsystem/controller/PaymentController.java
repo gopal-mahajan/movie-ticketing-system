@@ -8,6 +8,7 @@ import com.movie.ticketing.system.movieticketingsystem.entities.Ticket;
 import com.movie.ticketing.system.movieticketingsystem.repository.PaymentRepository;
 import com.movie.ticketing.system.movieticketingsystem.repository.SeatsRepository;
 import com.movie.ticketing.system.movieticketingsystem.repository.TicketRepository;
+import com.movie.ticketing.system.movieticketingsystem.service.SeatBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static com.movie.ticketing.system.movieticketingsystem.controller.SeatBookingController.seatLockingMap;
+import static com.movie.ticketing.system.movieticketingsystem.service.SeatBookingService.seatLockingMap;
 
 @RestController
 public class PaymentController {

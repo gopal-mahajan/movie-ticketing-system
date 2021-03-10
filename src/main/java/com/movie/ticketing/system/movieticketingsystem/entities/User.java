@@ -5,11 +5,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user")
 public class User {
-    private final String name;
+    private String name;
     private String mobile;
     private String email;
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY )
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private  Long id;
 
     public User(String name, String mobile, String email) {
@@ -18,6 +18,7 @@ public class User {
         this.email = email;
 
     }
+    User(){}
 
     public String getName() {
         return name;
