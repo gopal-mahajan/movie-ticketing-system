@@ -39,9 +39,9 @@ public class SeatBookingService {
             if (seatLockingMap.containsKey(i.getId())) {
                 innerMap = seatLockingMap.get(i.getId());
                 LocalDateTime expiryTime = innerMap.get("" + date + time);
-                if (expiryTime.isAfter(LocalDateTime.now())) {
+                if (expiryTime.isAfter(LocalDateTime.now()))   {
                     throw new Exception("Seat not Available");
-                }
+              }
                 innerMap.put("" + date + time, LocalDateTime.now().plusMinutes(10));
             } else {
                 innerMap = new HashMap<>();

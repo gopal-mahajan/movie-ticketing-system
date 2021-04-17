@@ -41,7 +41,7 @@ public class Seats {
         if (screenId > 0) {
             this.screenId = screenId;
         } else {
-            throw new Exception("Theater doesn't exist");
+            throw new Exception("Screen doesn't exist");
         }
     }
 
